@@ -19,12 +19,12 @@ long_press_detected = False
 def handle_clicks():
     global click_count
     if click_count == 1:
-        print("Flip")
-        subprocess.call(["/home/rmfrescue/sys_op/ros_control.sh", "flip"])
+        # start
+        subprocess.call(["/home/rmfrescue/sys_op/ros_control.sh", "start"])
         
     elif click_count == 2:
-        print("Reset")
-        subprocess.call(["/home/rmfrescue/sys_op/ros_control.sh", "restart"])
+        # stop
+        subprocess.call(["/home/rmfrescue/sys_op/ros_control.sh", "stop"])
     click_count = 0
 
 def rest_pressed(channel):
@@ -35,7 +35,7 @@ def rest_pressed(channel):
     while GPIO.input(REST_PIN) == GPIO.LOW:
         time.sleep(0.01)
         if time.time() - press_time > LONG_PRESS_DURATION:
-            print("Long press detected: Stop")
+            # long press detected
             subprocess.call(["/home/rmfrescue/sys_op/reboot.sh"])
             return
 
@@ -52,9 +52,6 @@ def rest_pressed(channel):
 
 GPIO.add_event_detect(REST_PIN, GPIO.FALLING, callback=rest_pressed, bouncetime=200)
 
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print("Exiting rest service")
+while True:
+    time.sleep(1)
 
