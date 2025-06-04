@@ -11,11 +11,11 @@ case "$1" in
 		source /home/rmfrescue/ORCA/install/local_setup.bash
 		source /home/rmfrescue/ORCA/install_rpi/local_setup.bash
 		ros2 launch $ROS_PACKAGE_NAME $LAUNCH_FILE &
-		./led_control.sh red
+		# /home/rmfrescue/sys_op/led_control.sh red
 		echo "enable" | tee /tmp/orca_state
 		;;
 	stop)
-		./led_control.sh white
+		# /home/rmfrescue/sys_op/led_control.sh white
 		echo "Stopping ORCA..." | tee -a $ROS_LOG
 		while pgrep -f orca > /dev/null; do
 			pkill -f orca
