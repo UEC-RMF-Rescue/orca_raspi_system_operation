@@ -1,26 +1,24 @@
 #!/bin/bash
 
 INTERNAL_IF="wlan0"
-ROUTER_SSID="hibiki"
-ROUTER_PASS="Maruh1b1k1"
+ROUTER_SSID="RRC01"
+ROUTER_PASS="1234567890"
 WIFI_SSID="hibiki"
 WIFI_PASS="Maruh1b1k1"
 
 connect_wifi () {
+	wifi_con_name="orca_wifi"
 	wlx_iface=$(/usr/sbin/ip -o link show | grep "wlx" | awk -F': ' '{print $2}')
         /usr/sbin/ip link set "$INTERNAL_IF" down
 	/usr/sbin/ip link set "$wlx_iface" up
-	/usr/bin/nmcli connection add type wifi con-name orca_wifi ifname $wlx_iface ssid $ROUTER_SSID
-	/usr/bin/nmcli connection modify orca_wifi wifi-sec.key-mgmt wpa-psk wifi-sec.psk $ROUTER_PASS
-	/usr/bin/nmcli connection modify orca_wifi ipv4.method manual\
+	/usr/bin/nmcli connection delete $wifi_con_name
+	/usr/bin/nmcli connection add type wifi con-name $wifi_con_name ifname $wlx_iface ssid $ROUTER_SSID
+	/usr/bin/nmcli connection modify $wifi_con_name wifi-sec.key-mgmt wpa-psk wifi-sec.psk $ROUTER_PASS
+	/usr/bin/nmcli connection modify $wifi_con_name ipv4.method manual\
 		ipv4.address 192.168.1.114/24\
 		ipv4.gateway 192.168.1.255\
 		ipv4.dns 8.8.8.8
-	/usr/bin/nmcli connection up orca_wifi
-}
-
-test_func () {
-    echo "hello world"
+	/usr/bin/nmcli connection up $wifi_con_name
 }
 
 if [ "$1" = "add" ]; then
